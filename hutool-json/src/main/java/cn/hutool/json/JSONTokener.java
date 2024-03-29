@@ -371,7 +371,7 @@ public class JSONTokener {
 	}
 
 	/**
-	 * Skip characters until the next character is the requested character. If the requested character is not found, no characters are skipped. 在遇到指定字符前，跳过其它字符。如果字符未找到，则不跳过任何字符。
+	 * Skip characters until the next character is the requested character. If the requested character is not found, no characters are skippe
 	 *
 	 * 
 	 */
