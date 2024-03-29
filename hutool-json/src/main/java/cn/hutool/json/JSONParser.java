@@ -5,15 +5,13 @@ import cn.hutool.core.lang.mutable.Mutable;
 import cn.hutool.core.lang.mutable.MutablePair;
 
 /**
- * JSON字符串解析器
- *
- * @author looly
+ * 
  * @since 5.8.0
  */
 public class JSONParser {
 
 	/**
-	 * 创建JSONParser
+	 * 
 	 *
 	 * @param tokener {@link JSONTokener}
 	 * @return JSONParser
@@ -25,7 +23,7 @@ public class JSONParser {
 	private final JSONTokener tokener;
 
 	/**
-	 * 构造
+	 * 
 	 *
 	 * @param tokener {@link JSONTokener}
 	 */
@@ -36,10 +34,10 @@ public class JSONParser {
 	// region parseTo
 
 	/**
-	 * 解析{@link JSONTokener}中的字符到目标的{@link JSONObject}中
+	 * 
 	 *
 	 * @param jsonObject {@link JSONObject}
-	 * @param filter     键值对过滤编辑器，可以通过实现此接口，完成解析前对键值对的过滤和修改操作，{@code null}表示不过滤
+	 * @param filter    
 	 */
 	public void parseTo(JSONObject jsonObject, Filter<MutablePair<String, Object>> filter) {
 		final JSONTokener tokener = this.tokener;
@@ -84,8 +82,7 @@ public class JSONParser {
 				case ';':
 				case ',':
 					if (tokener.nextClean() == '}') {
-						// issue#2380
-						// 尾后逗号（Trailing Commas），JSON中虽然不支持，但是ECMAScript 2017支持，此处做兼容。
+						// 
 						return;
 					}
 					tokener.back();
@@ -99,10 +96,7 @@ public class JSONParser {
 	}
 
 	/**
-	 * 解析JSON字符串到{@link JSONArray}中
-	 *
-	 * @param jsonArray {@link JSONArray}
-	 * @param filter    键值对过滤编辑器，可以通过实现此接口，完成解析前对值的过滤和修改操作，{@code null} 表示不过滤
+	 * 
 	 */
 	public void parseTo(JSONArray jsonArray, Filter<Mutable<Object>> filter) {
 		final JSONTokener x = this.tokener;
