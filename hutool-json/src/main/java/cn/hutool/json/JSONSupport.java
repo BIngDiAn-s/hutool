@@ -3,15 +3,12 @@ package cn.hutool.json;
 import cn.hutool.core.bean.BeanUtil;
 
 /**
- * JSON支持<br>
- * 继承此类实现实体类与JSON的相互转换
- *
- * @author Looly
+ * 
  */
 public class JSONSupport implements JSONString, JSONBeanParser<JSON> {
 
 	/**
-	 * JSON String转Bean
+	 * 
 	 *
 	 * @param jsonString JSON String
 	 */
@@ -20,7 +17,7 @@ public class JSONSupport implements JSONString, JSONBeanParser<JSON> {
 	}
 
 	/**
-	 * JSON转Bean
+	 * 
 	 *
 	 * @param json JSON
 	 */
@@ -31,7 +28,7 @@ public class JSONSupport implements JSONString, JSONBeanParser<JSON> {
 	}
 
 	/**
-	 * @return JSON对象
+	 * 
 	 */
 	public JSONObject toJSON() {
 		return new JSONObject(this);
@@ -43,9 +40,7 @@ public class JSONSupport implements JSONString, JSONBeanParser<JSON> {
 	}
 
 	/**
-	 * 美化的JSON（使用回车缩进显示JSON），用于打印输出debug
-	 *
-	 * @return 美化的JSON
+	 * 
 	 */
 	public String toPrettyString() {
 		return toJSON().toStringPretty();
