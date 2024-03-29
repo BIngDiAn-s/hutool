@@ -4,8 +4,7 @@ import cn.hutool.core.exceptions.ExceptionUtil;
 import cn.hutool.core.util.StrUtil;
 
 /**
- * JSON异常
- *
+
  * @author looly
  * @since 3.0.2
  */
