@@ -9,44 +9,25 @@ import cn.hutool.json.JSONException;
 import cn.hutool.json.JSONObject;
 
 /**
- * JSON转XML字符串工具
- *
- * @author looly
- * @since 5.7.11
+ * 
  */
 public class JSONXMLSerializer {
 	/**
-	 * 转换JSONObject为XML
-	 * Convert a JSONObject into a well-formed, element-normal XML string.
 	 *
-	 * @param object A JSONObject.
-	 * @return A string.
-	 * @throws JSONException Thrown if there is an error parsing the string
 	 */
 	public static String toXml(Object object) throws JSONException {
 		return toXml(object, null);
 	}
 
 	/**
-	 * 转换JSONObject为XML
-	 *
-	 * @param object  JSON对象或数组
-	 * @param tagName 可选标签名称，名称为空时忽略标签
-	 * @return A string.
-	 * @throws JSONException JSON解析异常
+	 * 
 	 */
 	public static String toXml(Object object, String tagName) throws JSONException {
 		return toXml(object, tagName, "content");
 	}
 
 	/**
-	 * 转换JSONObject为XML
-	 *
-	 * @param object      JSON对象或数组
-	 * @param tagName     可选标签名称，名称为空时忽略标签
-	 * @param contentKeys 标识为内容的key,遇到此key直接解析内容而不增加对应名称标签
-	 * @return A string.
-	 * @throws JSONException JSON解析异常
+	 * 
 	 */
 	public static String toXml(Object object, String tagName, String... contentKeys) throws JSONException {
 		if (null == object) {
@@ -120,12 +101,7 @@ public class JSONXMLSerializer {
 	}
 
 	/**
-	 * 追加标签
-	 *
-	 * @param sb       XML内容
-	 * @param tagName  标签名
-	 * @param isEndTag 是否结束标签
-	 * @since 5.7.11
+	 * 
 	 */
 	private static void appendTag(StringBuilder sb, String tagName, boolean isEndTag) {
 		if (StrUtil.isNotBlank(tagName)) {
@@ -138,12 +114,7 @@ public class JSONXMLSerializer {
 	}
 
 	/**
-	 * 将内容使用标签包装为XML
-	 *
-	 * @param tagName 标签名
-	 * @param content 内容
-	 * @return 包装后的XML
-	 * @since 5.7.11
+	 * 
 	 */
 	private static String wrapWithTag(String content, String tagName) {
 		if (StrUtil.isBlank(tagName)) {
