@@ -30,20 +30,16 @@ import java.util.Iterator;
 import java.util.Map;
 
 /**
- * JSON数据写出器<br>
- * 通过简单的append方式将JSON的键值对等信息写出到{@link Writer}中。
- *
- * @author looly
- * @since 5.7.3
+ * 
  */
 public class JSONWriter extends Writer {
 
 	/**
-	 * 缩进因子，定义每一级别增加的缩进量
+	 * 
 	 */
 	private final int indentFactor;
 	/**
-	 * 本级别缩进量
+	 * 
 	 */
 	private final int indent;
 	/**
@@ -51,39 +47,28 @@ public class JSONWriter extends Writer {
 	 */
 	private final Writer writer;
 	/**
-	 * JSON选项
+	 * 
 	 */
 	private final JSONConfig config;
 
 	/**
-	 * 写出当前值是否需要分隔符
+	 * 
 	 */
 	private boolean needSeparator;
 	/**
-	 * 是否为JSONArray模式
+	 * 
 	 */
 	private boolean arrayMode;
 
 	/**
-	 * 创建JSONWriter
-	 *
-	 * @param writer       {@link Writer}
-	 * @param indentFactor 缩进因子，定义每一级别增加的缩进量
-	 * @param indent       本级别缩进量
-	 * @param config       JSON选项
-	 * @return JSONWriter
+	 * 
 	 */
 	public static JSONWriter of(Writer writer, int indentFactor, int indent, JSONConfig config) {
 		return new JSONWriter(writer, indentFactor, indent, config);
 	}
 
 	/**
-	 * 构造
 	 *
-	 * @param writer       {@link Writer}
-	 * @param indentFactor 缩进因子，定义每一级别增加的缩进量
-	 * @param indent       本级别缩进量
-	 * @param config       JSON选项
 	 */
 	public JSONWriter(Writer writer, int indentFactor, int indent, JSONConfig config) {
 		this.writer = writer;
@@ -93,9 +78,7 @@ public class JSONWriter extends Writer {
 	}
 
 	/**
-	 * JSONObject写出开始，默认写出"{"
-	 *
-	 * @return this
+	 * 
 	 */
 	public JSONWriter beginObj() {
 		writeRaw(CharUtil.DELIM_START);
@@ -103,9 +86,7 @@ public class JSONWriter extends Writer {
 	}
 
 	/**
-	 * JSONArray写出开始，默认写出"["
-	 *
-	 * @return this
+	 * 
 	 */
 	public JSONWriter beginArray() {
 		writeRaw(CharUtil.BRACKET_START);
@@ -114,42 +95,34 @@ public class JSONWriter extends Writer {
 	}
 
 	/**
-	 * 结束，默认根据开始的类型，补充"}"或"]"
-	 *
-	 * @return this
+	 * 
 	 */
 	public JSONWriter end() {
-		// 换行缩进
+		// 
 		writeLF().writeSpace(indent);
 		writeRaw(arrayMode ? CharUtil.BRACKET_END : CharUtil.DELIM_END);
 		flush();
 		arrayMode = false;
-		// 当前对象或数组结束，当新的
+		// 
 		needSeparator = true;
 		return this;
 	}
 
 	/**
-	 * 写出键，自动处理分隔符和缩进，并包装键名
+	 * 
 	 *
-	 * @param key 键名
-	 * @return this
 	 */
 	public JSONWriter writeKey(String key) {
 		if (needSeparator) {
 			writeRaw(CharUtil.COMMA);
 		}
-		// 换行缩进
+		// 
 		writeLF().writeSpace(indentFactor + indent);
 		return writeRaw(JSONUtil.quote(key));
 	}
 
 	/**
-	 * 写出值，自动处理分隔符和缩进，自动判断类型，并根据不同类型写出特定格式的值<br>
-	 * 如果写出的值为{@code null}或者{@link JSONNull}，且配置忽略null，则跳过。
-	 *
-	 * @param value 值
-	 * @return this
+	 * 
 	 */
 	public JSONWriter writeValue(Object value) {
 		if(JSONUtil.isNull(value) && config.isIgnoreNullValue()){
@@ -159,13 +132,7 @@ public class JSONWriter extends Writer {
 	}
 
 	/**
-	 * 写出字段名及字段值，如果字段值是{@code null}且忽略null值，则不写出任何内容
-	 *
-	 * @param key 字段名
-	 * @param value 字段值
-	 * @return this
-	 * @since 5.7.6
-	 * @deprecated 请使用 {@link #writeField(MutablePair, Filter)}
+	 * 
 	 */
 	@Deprecated
 	public JSONWriter writeField(String key, Object value){
@@ -176,12 +143,7 @@ public class JSONWriter extends Writer {
 	}
 
 	/**
-	 * 写出字段名及字段值，如果字段值是{@code null}且忽略null值，则不写出任何内容
-	 *
-	 * @param pair 键值对
-	 * @param filter 键值对的过滤器，可以编辑键值对
-	 * @return this
-	 * @since 5.8.6
+	 * 
 	 */
 	public JSONWriter writeField(MutablePair<Object, Object> pair, Filter<MutablePair<Object, Object>> filter){
 		if(JSONUtil.isNull(pair.getValue()) && config.isIgnoreNullValue()){
@@ -190,7 +152,7 @@ public class JSONWriter extends Writer {
 
 		if (null == filter || filter.accept(pair)) {
 			if(false == arrayMode){
-				// JSONArray只写值，JSONObject写键值对
+				// 
 				writeKey(StrUtil.toString(pair.getKey()));
 			}
 			return writeValueDirect(pair.getValue(), filter);
@@ -219,18 +181,14 @@ public class JSONWriter extends Writer {
 
 	// ------------------------------------------------------------------------------ Private methods
 	/**
-	 * 写出值，自动处理分隔符和缩进，自动判断类型，并根据不同类型写出特定格式的值
-	 *
-	 * @param value 值
-	 * @param filter 键值对过滤器
-	 * @return this
+	 * 
 	 */
 	private JSONWriter writeValueDirect(Object value, Filter<MutablePair<Object, Object>> filter) {
 		if (arrayMode) {
 			if (needSeparator) {
 				writeRaw(CharUtil.COMMA);
 			}
-			// 换行缩进
+			// 
 			writeLF().writeSpace(indentFactor + indent);
 		} else {
 			writeRaw(CharUtil.COLON).writeSpace(1);
@@ -240,11 +198,7 @@ public class JSONWriter extends Writer {
 	}
 
 	/**
-	 * 写出JSON的值，根据值类型不同，输出不同内容
-	 *
-	 * @param value 值
-	 * @param filter 过滤器
-	 * @return this
+	 * 
 	 */
 	private JSONWriter writeObjValue(Object value, Filter<MutablePair<Object, Object>> filter) {
 		final int indent = indentFactor + this.indent;
@@ -283,33 +237,23 @@ public class JSONWriter extends Writer {
 	}
 
 	/**
-	 * 写出数字，根据{@link JSONConfig#isStripTrailingZeros()} 配置不同，写出不同数字<br>
-	 * 主要针对Double型是否去掉小数点后多余的0<br>
-	 * 此方法输出的值不包装引号。
-	 *
-	 * @param number 数字
+	 * 
 	 */
 	private void writeNumberValue(Number number) {
-		// since 5.6.2可配置是否去除末尾多余0，例如如果为true,5.0返回5
+		// s
 		final boolean isStripTrailingZeros = null == config || config.isStripTrailingZeros();
 		writeRaw(NumberUtil.toStr(number, isStripTrailingZeros));
 	}
 
 	/**
-	 * 写出Boolean值，直接写出true或false,不适用引号包装
-	 *
-	 * @param value Boolean值
+	 * 
 	 */
 	private void writeBooleanValue(Boolean value) {
 		writeRaw(value.toString());
 	}
 
 	/**
-	 * 输出实现了{@link JSONString}接口的对象，通过调用{@link JSONString#toJSONString()}获取JSON字符串<br>
-	 * {@link JSONString}按照JSON对象对待，此方法输出的JSON字符串不包装引号。<br>
-	 * 如果toJSONString()返回null，调用toString()方法并使用双引号包装。
-	 *
-	 * @param jsonString {@link JSONString}
+	 * 
 	 */
 	private void writeJSONStringValue(JSONString jsonString) {
 		String valueStr;
@@ -326,12 +270,8 @@ public class JSONWriter extends Writer {
 	}
 
 	/**
-	 * 写出字符串值，并包装引号并转义字符<br>
-	 * 对所有双引号做转义处理（使用双反斜杠做转义）<br>
-	 * 为了能在HTML中较好的显示，会将&lt;/转义为&lt;\/<br>
-	 * JSON字符串中不能包含控制字符和未经转义的引号和反斜杠
-	 *
-	 * @param csq 字符串
+	 * 
+	 * @param csq 
 	 */
 	private void writeStrValue(String csq) {
 		try {
@@ -342,9 +282,7 @@ public class JSONWriter extends Writer {
 	}
 
 	/**
-	 * 写出空格
-	 *
-	 * @param count 空格数
+	 * 
 	 */
 	private void writeSpace(int count) {
 		if (indentFactor > 0) {
@@ -355,9 +293,6 @@ public class JSONWriter extends Writer {
 	}
 
 	/**
-	 * 写出换换行符
-	 *
-	 * @return this
 	 */
 	private JSONWriter writeLF() {
 		if (indentFactor > 0) {
@@ -367,10 +302,7 @@ public class JSONWriter extends Writer {
 	}
 
 	/**
-	 * 写入原始字符串值，不做任何处理
-	 *
-	 * @param csq 字符串
-	 * @return this
+	 * 
 	 */
 	private JSONWriter writeRaw(String csq) {
 		try {
@@ -382,10 +314,7 @@ public class JSONWriter extends Writer {
 	}
 
 	/**
-	 * 写入原始字符值，不做任何处理
-	 *
-	 * @param c 字符串
-	 * @return this
+	 * 
 	 */
 	private JSONWriter writeRaw(char c) {
 		try {
@@ -397,11 +326,7 @@ public class JSONWriter extends Writer {
 	}
 
 	/**
-	 * 按照给定格式格式化日期，格式为空时返回时间戳字符串
-	 *
-	 * @param dateObj Date或者Calendar对象
-	 * @param format  格式
-	 * @return 日期字符串
+	 * 
 	 */
 	private static String formatDate(Object dateObj, String format) {
 		if (StrUtil.isNotBlank(format)) {
@@ -414,14 +339,14 @@ public class JSONWriter extends Writer {
 
 			if (GlobalCustomFormat.FORMAT_SECONDS.equals(format)
 					|| GlobalCustomFormat.FORMAT_MILLISECONDS.equals(format)) {
-				// Hutool自定义的秒和毫秒表示，默认不包装双引号
+				// 
 				return dateStr;
 			}
-			//用户定义了日期格式
+			//
 			return JSONUtil.quote(dateStr);
 		}
 
-		//默认使用时间戳
+		//
 		long timeMillis;
 		if (dateObj instanceof TemporalAccessor) {
 			timeMillis = TemporalAccessorUtil.toEpochMilli((TemporalAccessor) dateObj);
