@@ -10,50 +10,45 @@ import java.io.Reader;
 import java.io.StringReader;
 
 /**
- * JSON解析器，用于将JSON字符串解析为JSONObject或者JSONArray
- *
- * @author from JSON.org
+ * 
  */
 public class JSONTokener {
 
 	private long character;
 	/**
-	 * 是否结尾 End of stream
+	 * 
 	 */
 	private boolean eof;
 	/**
-	 * 在Reader的位置（解析到第几个字符）
+	 * 
 	 */
 	private long index;
 	/**
-	 * 当前所在行
+	 * 
 	 */
 	private long line;
 	/**
-	 * 前一个字符
+	 *
 	 */
 	private char previous;
 	/**
-	 * 是否使用前一个字符
+	 * 
 	 */
 	private boolean usePrevious;
 	/**
-	 * 源
+	 * 
 	 */
 	private final Reader reader;
 
 	/**
-	 * JSON配置
+	 * 
 	 */
 	private final JSONConfig config;
 
 	// ------------------------------------------------------------------------------------ Constructor start
 
 	/**
-	 * 从Reader中构建
-	 *
-	 * @param reader Reader
-	 * @param config JSON配置
+	 * 
 	 */
 	public JSONTokener(Reader reader, JSONConfig config) {
 		this.reader = reader.markSupported() ? reader : new BufferedReader(reader);
@@ -67,20 +62,14 @@ public class JSONTokener {
 	}
 
 	/**
-	 * 从InputStream中构建，使用UTF-8编码
-	 *
-	 * @param inputStream InputStream
-	 * @param config      JSON配置
+	 * 
 	 */
 	public JSONTokener(InputStream inputStream, JSONConfig config) throws JSONException {
 		this(IoUtil.getUtf8Reader(inputStream), config);
 	}
 
 	/**
-	 * 从字符串中构建
 	 *
-	 * @param s      JSON字符串
-	 * @param config JSON配置
 	 */
 	public JSONTokener(CharSequence s, JSONConfig config) {
 		this(new StringReader(StrUtil.str(s)), config);
@@ -88,7 +77,7 @@ public class JSONTokener {
 	// ------------------------------------------------------------------------------------ Constructor end
 
 	/**
-	 * 将标记回退到第一个字符，重新开始解析新的JSON
+	 * 
 	 */
 	public void back() throws JSONException {
 		if (this.usePrevious || this.index <= 0) {
@@ -101,16 +90,14 @@ public class JSONTokener {
 	}
 
 	/**
-	 * @return 是否进入结尾
+	 * 
 	 */
 	public boolean end() {
 		return this.eof && false == this.usePrevious;
 	}
 
 	/**
-	 * 源字符串是否有更多的字符
-	 *
-	 * @return 如果未达到结尾返回true，否则false
+	 
 	 */
 	public boolean more() throws JSONException {
 		this.next();
@@ -122,10 +109,7 @@ public class JSONTokener {
 	}
 
 	/**
-	 * 获得源字符串中的下一个字符
 	 *
-	 * @return 下一个字符, or 0 if past the end of the source string.
-	 * @throws JSONException JSON异常，包装IO异常
 	 */
 	public char next() throws JSONException {
 		int c;
@@ -168,11 +152,7 @@ public class JSONTokener {
 	}
 
 	/**
-	 * 读取下一个字符，并比对是否和指定字符匹配
-	 *
-	 * @param c 被匹配的字符
-	 * @return The character 匹配到的字符
-	 * @throws JSONException 如果不匹配抛出此异常
+	 * 
 	 */
 	public char next(char c) throws JSONException {
 		char n = this.next();
@@ -183,11 +163,7 @@ public class JSONTokener {
 	}
 
 	/**
-	 * 获得接下来的n个字符
 	 *
-	 * @param n 字符数
-	 * @return 获得的n个字符组成的字符串
-	 * @throws JSONException 如果源中余下的字符数不足以提供所需的字符数，抛出此异常
 	 */
 	public String next(int n) throws JSONException {
 		if (n == 0) {
@@ -207,10 +183,8 @@ public class JSONTokener {
 	}
 
 	/**
-	 * 获得下一个字符，跳过空白符
-	 *
-	 * @return 获得的字符，0表示没有更多的字符
-	 * @throws JSONException 获得下一个字符时抛出的异常
+	 * 
+	 * 
 	 */
 	public char nextClean() throws JSONException {
 		char c;
@@ -223,12 +197,7 @@ public class JSONTokener {
 	}
 
 	/**
-	 * 返回当前位置到指定引号前的所有字符，反斜杠的转义符也会被处理。<br>
-	 * 标准的JSON是不允许使用单引号包含字符串的，但是此实现允许。
-	 *
-	 * @param quote 字符引号, 包括 {@code "}（双引号） 或 {@code '}（单引号）。
-	 * @return 截止到引号前的字符串
-	 * @throws JSONException 出现无结束的字符串时抛出此异常
+	 * 
 	 */
 	public String nextString(char quote) throws JSONException {
 		char c;
@@ -282,10 +251,7 @@ public class JSONTokener {
 
 	/**
 	 * Get the text up but not including the specified character or the end of line, whichever comes first. <br>
-	 * 获得从当前位置直到分隔符（不包括分隔符）或行尾的的所有字符。
-	 *
-	 * @param delimiter 分隔符
-	 * @return 字符串
+	 * 
 	 */
 	public String nextTo(char delimiter) throws JSONException {
 		StringBuilder sb = new StringBuilder();
@@ -323,9 +289,7 @@ public class JSONTokener {
 	}
 
 	/**
-	 * 获取下一个String格式的值，用户获取key
-	 * @return String格式的值
-	 * @since 5.8.22
+	 * 
 	 */
 	public String nextStringValue(){
 		char c = this.nextClean();
@@ -360,10 +324,7 @@ public class JSONTokener {
 	}
 
 	/**
-	 * 获得下一个值，值类型可以是Boolean, Double, Integer, JSONArray, JSONObject, Long, or String, or the JSONObject.NULL
-	 *
-	 * @return Boolean, Double, Integer, JSONArray, JSONObject, Long, or String, or the JSONObject.NULL
-	 * @throws JSONException 语法错误
+	 * 
 	 */
 	public Object nextValue() throws JSONException {
 		char c = this.nextClean();
@@ -412,8 +373,7 @@ public class JSONTokener {
 	/**
 	 * Skip characters until the next character is the requested character. If the requested character is not found, no characters are skipped. 在遇到指定字符前，跳过其它字符。如果字符未找到，则不跳过任何字符。
 	 *
-	 * @param to 需要定位的字符
-	 * @return 定位的字符，如果字符未找到返回0
+	 * 
 	 */
 	public char skipTo(char to) throws JSONException {
 		char c;
@@ -440,18 +400,13 @@ public class JSONTokener {
 	}
 
 	/**
-	 * Make a JSONException to signal a syntax error. <br>
-	 * 构建 JSONException 用于表示语法错误
-	 *
-	 * @param message 错误消息
-	 * @return A JSONException object, suitable for throwing
+	 * Ma
 	 */
 	public JSONException syntaxError(String message) {
 		return new JSONException(message + this);
 	}
 
-	/**
-	 * 转为 {@link JSONArray}
+	/*
 	 *
 	 * @return {@link JSONArray}
 	 */
