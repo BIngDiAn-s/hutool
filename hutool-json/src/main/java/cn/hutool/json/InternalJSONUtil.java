@@ -1,4 +1,4 @@
-package cn.hutool.json;
+	package cn.hutool.json;
 
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.convert.Convert;
@@ -20,8 +20,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 /**
- * 内部JSON工具类，仅用于JSON内部使用
- *
+ * 
  * @author Looly
  */
 public final class InternalJSONUtil {
@@ -30,11 +29,7 @@ public final class InternalJSONUtil {
 	}
 
 	/**
-	 * 如果对象是Number 且是 NaN or infinite，将抛出异常
-	 *
-	 * @param obj 被检查的对象
-	 * @return 检测后的值
-	 * @throws JSONException If o is a non-finite number.
+	 * 
 	 */
 	static Object testValidity(Object obj) throws JSONException {
 		if (false == ObjectUtil.isValidIfNumber(obj)) {
@@ -44,18 +39,7 @@ public final class InternalJSONUtil {
 	}
 
 	/**
-	 * 值转为String，用于JSON中。规则为：
-	 * <ul>
-	 *     <li>对象如果实现了{@link JSONString}接口，调用{@link JSONString#toJSONString()}方法</li>
-	 *     <li>对象如果实现了{@link JSONString}接口，调用{@link JSONString#toJSONString()}方法</li>
-	 *     <li>对象如果是数组或Collection，包装为{@link JSONArray}</li>
-	 *     <li>对象如果是Map，包装为{@link JSONObject}</li>
-	 *     <li>对象如果是数字，使用{@link NumberUtil#toStr(Number)}转换为字符串</li>
-	 *     <li>其他情况调用toString并使用双引号包装</li>
-	 * </ul>
-	 *
-	 * @param value 需要转为字符串的对象
-	 * @return 字符串
+	 * 
 	 * @throws JSONException If the value is or contains an invalid number.
 	 */
 	static String valueToString(Object value) throws JSONException {
@@ -86,18 +70,18 @@ public final class InternalJSONUtil {
 	}
 
 	/**
-	 * 尝试转换字符串为number, boolean, or null，无法转换返回String
+	 * 
 	 *
 	 * @param string A String.
 	 * @return A simple JSON value.
 	 */
 	public static Object stringToValue(String string) {
-		// null处理
+		// 
 		if (StrUtil.isEmpty(string) || StrUtil.NULL.equalsIgnoreCase(string)) {
 			return JSONNull.NULL;
 		}
 
-		// boolean处理
+		// 
 		if ("true".equalsIgnoreCase(string)) {
 			return Boolean.TRUE;
 		}
@@ -105,12 +89,12 @@ public final class InternalJSONUtil {
 			return Boolean.FALSE;
 		}
 
-		// Number处理
+		// 
 		char b = string.charAt(0);
 		if ((b >= '0' && b <= '9') || b == '-') {
 			try {
 				if (StrUtil.containsAnyIgnoreCase(string, ".", "e")) {
-					// pr#192@Gitee，Double会出现小数精度丢失问题，此处使用BigDecimal
+					// p
 					return new BigDecimal(string);
 				} else {
 					final long myLong = Long.parseLong(string);
@@ -126,19 +110,12 @@ public final class InternalJSONUtil {
 			}
 		}
 
-		// 其它情况返回原String值下
+		// 
 		return string;
 	}
 
 	/**
-	 * 将Property的键转化为JSON形式<br>
-	 * 用于识别类似于：com.luxiaolei.package.hutool这类用点隔开的键<br>
-	 * 注意：是否允许重复键，取决于JSONObject配置
-	 *
-	 * @param jsonObject JSONObject
-	 * @param key        键
-	 * @param value      值
-	 * @return JSONObject
+	 * 
 	 */
 	static JSONObject propertyPut(JSONObject jsonObject, Object key, Object value, Filter<MutablePair<String, Object>> filter) {
 		final String[] path = StrUtil.splitToArray(Convert.toStr(key), CharUtil.DOT);
@@ -158,17 +135,7 @@ public final class InternalJSONUtil {
 	}
 
 	/**
-	 * 默认情况下是否忽略null值的策略选择，以下对象不忽略null值，其它对象忽略：
-	 *
-	 * <pre>
-	 *     1. CharSequence
-	 *     2. JSONTokener
-	 *     3. Map
-	 * </pre>
-	 *
-	 * @param obj 需要检查的对象
-	 * @return 是否忽略null值
-	 * @since 4.3.1
+	 * 
 	 */
 	static boolean defaultIgnoreNullValue(Object obj) {
 		return (false == (obj instanceof CharSequence))//
@@ -177,11 +144,7 @@ public final class InternalJSONUtil {
 	}
 
 	/**
-	 * 将{@link JSONConfig}参数转换为Bean拷贝所用的{@link CopyOptions}
 	 *
-	 * @param config {@link JSONConfig}
-	 * @return {@link CopyOptions}
-	 * @since 5.8.0
 	 */
 	static CopyOptions toCopyOptions(JSONConfig config) {
 		return CopyOptions.create()
@@ -192,11 +155,7 @@ public final class InternalJSONUtil {
 	}
 
 	/**
-	 * 根据配置创建对应的原始Map
-	 *
-	 * @param capacity 初始大小
-	 * @param config   JSON配置项，{@code null}则使用默认配置
-	 * @return Map
+	 * 
 	 */
 	static Map<String, Object> createRawMap(int capacity, JSONConfig config) {
 		final Map<String, Object> rawHashMap;
