@@ -21,48 +21,37 @@ import java.util.ListIterator;
 import java.util.RandomAccess;
 
 /**
- * JSON数组<br>
- * JSON数组是表示中括号括住的数据表现形式<br>
- * 对应的JSON字符串格格式例如:
- *
- * <pre>
- * ["a", "b", "c", 12]
- * </pre>
- *
+
  * @author looly
  */
 public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, RandomAccess {
 	private static final long serialVersionUID = 2664900568717612292L;
 
 	/**
-	 * 默认初始大小
+	
 	 */
 	public static final int DEFAULT_CAPACITY = 10;
 
 	/**
-	 * 持有原始数据的List
+	
 	 */
 	private List<Object> rawList;
 	/**
-	 * 配置项
+	
 	 */
 	private final JSONConfig config;
 
 	// region Constructors
 
 	/**
-	 * 构造<br>
-	 * 默认使用{@link ArrayList} 实现
+
 	 */
 	public JSONArray() {
 		this(DEFAULT_CAPACITY);
 	}
 
 	/**
-	 * 构造<br>
-	 * 默认使用{@link ArrayList} 实现
 	 *
-	 * @param initialCapacity 初始大小
 	 * @since 3.2.2
 	 */
 	public JSONArray(int initialCapacity) {
@@ -70,10 +59,7 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 	}
 
 	/**
-	 * 构造<br>
-	 * 默认使用{@link ArrayList} 实现
-	 *
-	 * @param config JSON配置项
+	 * 
 	 * @since 4.6.5
 	 */
 	public JSONArray(JSONConfig config) {
@@ -81,11 +67,7 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 	}
 
 	/**
-	 * 构造<br>
-	 * 默认使用{@link ArrayList} 实现
-	 *
-	 * @param initialCapacity 初始大小
-	 * @param config          JSON配置项
+	 * 
 	 * @since 4.1.19
 	 */
 	public JSONArray(int initialCapacity, JSONConfig config) {
@@ -94,74 +76,28 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 	}
 
 	/**
-	 * 从对象构造，忽略{@code null}的值<br>
-	 * 支持以下类型的参数：
-	 *
-	 * <pre>
-	 * 1. 数组
-	 * 2. {@link Iterable}对象
-	 * 3. JSON数组字符串
-	 * </pre>
-	 *
-	 * @param object 数组或集合或JSON数组字符串
-	 * @throws JSONException 非数组或集合
+	 * 
 	 */
 	public JSONArray(Object object) throws JSONException {
 		this(object, true);
 	}
 
 	/**
-	 * 从对象构造<br>
-	 * 支持以下类型的参数：
 	 *
-	 * <pre>
-	 * 1. 数组
-	 * 2. {@link Iterable}对象
-	 * 3. JSON数组字符串
-	 * </pre>
-	 *
-	 * @param object          数组或集合或JSON数组字符串
-	 * @param ignoreNullValue 是否忽略空值
-	 * @throws JSONException 非数组或集合
 	 */
 	public JSONArray(Object object, boolean ignoreNullValue) throws JSONException {
 		this(object, JSONConfig.create().setIgnoreNullValue(ignoreNullValue));
 	}
 
 	/**
-	 * 从对象构造<br>
-	 * 支持以下类型的参数：
 	 *
-	 * <pre>
-	 * 1. 数组
-	 * 2. {@link Iterable}对象
-	 * 3. JSON数组字符串
-	 * </pre>
-	 *
-	 * @param object     数组或集合或JSON数组字符串
-	 * @param jsonConfig JSON选项
-	 * @throws JSONException 非数组或集合
-	 * @since 4.6.5
 	 */
 	public JSONArray(Object object, JSONConfig jsonConfig) throws JSONException {
 		this(object, jsonConfig, null);
 	}
 
 	/**
-	 * 从对象构造<br>
-	 * 支持以下类型的参数：
 	 *
-	 * <pre>
-	 * 1. 数组
-	 * 2. {@link Iterable}对象
-	 * 3. JSON数组字符串
-	 * </pre>
-	 *
-	 * @param object     数组或集合或JSON数组字符串
-	 * @param jsonConfig JSON选项
-	 * @param filter     键值对过滤编辑器，可以通过实现此接口，完成解析前对值的过滤和修改操作，{@code null}表示不过滤
-	 * @throws JSONException 非数组或集合
-	 * @since 5.8.0
 	 */
 	public JSONArray(Object object, JSONConfig jsonConfig, Filter<Mutable<Object>> filter) throws JSONException {
 		this(DEFAULT_CAPACITY, jsonConfig);
@@ -175,11 +111,7 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 	}
 
 	/**
-	 * 设置转为字符串时的日期格式，默认为时间戳（null值）
-	 *
-	 * @param format 格式，null表示使用时间戳
-	 * @return this
-	 * @since 4.1.19
+	 * 
 	 */
 	public JSONArray setDateFormat(String format) {
 		this.config.setDateFormat(format);
@@ -187,11 +119,6 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 	}
 
 	/**
-	 * JSONArray转为以{@code separator}为分界符的字符串
-	 *
-	 * @param separator 分界符
-	 * @return a string.
-	 * @throws JSONException If the array contains an invalid number.
 	 */
 	public String join(String separator) throws JSONException {
 		return StrJoiner.of(separator)
@@ -225,7 +152,7 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 
 	/**
 	 * Append an object value. This increases the array's length by one. <br>
-	 * 加入元素，数组长度+1，等同于 {@link JSONArray#add(Object)}
+	 * 
 	 *
 	 * @param value 值，可以是： Boolean, Double, Integer, JSONArray, JSONObject, Long, or String, or the JSONNull.NULL。
 	 * @return this.
@@ -237,7 +164,7 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 
 	/**
 	 * Append an object value. This increases the array's length by one. <br>
-	 * 加入元素，数组长度+1，等同于 {@link JSONArray#add(Object)}
+	
 	 *
 	 * @param value 值，可以是： Boolean, Double, Integer, JSONArray, JSONObject, Long, or String, or the JSONNull.NULL。
 	 * @return this.
@@ -249,12 +176,7 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 	}
 
 	/**
-	 * 加入或者替换JSONArray中指定Index的值，如果index大于JSONArray的长度，将在指定index设置值，之前的位置填充JSONNull.Null
-	 *
-	 * @param index 位置
-	 * @param value 值对象. 可以是以下类型: Boolean, Double, Integer, JSONArray, JSONObject, Long, String, or the JSONNull.NULL.
-	 * @return this.
-	 * @throws JSONException index &lt; 0 或者非有限的数字
+	 * 
 	 * @see #set(int, Object)
 	 */
 	public JSONArray put(int index, Object value) throws JSONException {
@@ -263,11 +185,7 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 	}
 
 	/**
-	 * 根据给定名列表，与其位置对应的值组成JSONObject
-	 *
-	 * @param names 名列表，位置与JSONArray中的值位置对应
-	 * @return A JSONObject，无名或值返回null
-	 * @throws JSONException 如果任何一个名为null
+	 * 
 	 */
 	public JSONObject toJSONObject(JSONArray names) throws JSONException {
 		if (names == null || names.size() == 0 || this.size() == 0) {
@@ -313,10 +231,7 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 	}
 
 	/**
-	 * 当此JSON列表的每个元素都是一个JSONObject时，可以调用此方法返回一个Iterable，便于使用foreach语法遍历
-	 *
-	 * @return Iterable
-	 * @since 4.0.12
+	 * 
 	 */
 	public Iterable<JSONObject> jsonIter() {
 		return new JSONObjectIter(iterator());
@@ -413,11 +328,7 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 	}
 
 	/**
-	 * 加入或者替换JSONArray中指定Index的值，如果index大于JSONArray的长度，将在指定index设置值，之前的位置填充JSONNull.Null
 	 *
-	 * @param index   位置
-	 * @param element 值对象. 可以是以下类型: Boolean, Double, Integer, JSONArray, JSONObject, Long, String, or the JSONNull.NULL.
-	 * @return 替换的值，即之前的值
 	 */
 	@Override
 	public Object set(int index, Object element) {
@@ -425,20 +336,14 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 	}
 
 	/**
-	 * 加入或者替换JSONArray中指定Index的值，如果index大于JSONArray的长度，将在指定index设置值，之前的位置填充JSONNull.Null
-	 *
-	 * @param index   位置
-	 * @param element 值对象. 可以是以下类型: Boolean, Double, Integer, JSONArray, JSONObject, Long, String, or the JSONNull.NULL.
-	 * @param filter  过滤器，可以修改值，key（index）无法修改
-	 * @return 替换的值，即之前的值
-	 * @since 5.8.0
+	 * 
 	 */
 	public Object set(int index, Object element, Filter<MutablePair<Integer, Object>> filter) {
-		// 添加前置过滤，通过MutablePair实现过滤、修改键值对等
+		// 
 		if (null != filter) {
 			final MutablePair<Integer, Object> pair = new MutablePair<>(index, element);
 			if (filter.accept(pair)) {
-				// 使用修改后的值
+				// 
 				element = pair.getValue();
 			}
 		}
@@ -458,7 +363,7 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 			InternalJSONUtil.testValidity(element);
 			this.rawList.add(index, JSONUtil.wrap(element, this.config));
 		} else {
-			// issue#3286, 增加安全检查，最多增加10倍
+			// 
 			Validator.checkIndexLimit(index, this.size());
 			while (index != this.size()) {
 				this.add(JSONNull.NULL);
@@ -494,31 +399,21 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 	}
 
 	/**
-	 * 转为Bean数组
-	 *
-	 * @param arrayClass 数组元素类型
-	 * @return 实体类对象
+	 * 
 	 */
 	public Object toArray(Class<?> arrayClass) {
 		return JSONConverter.toArray(this, arrayClass);
 	}
 
 	/**
-	 * 转为{@link ArrayList}
-	 *
-	 * @param <T>         元素类型
-	 * @param elementType 元素类型
-	 * @return {@link ArrayList}
-	 * @since 3.0.8
+	 * 
 	 */
 	public <T> List<T> toList(Class<T> elementType) {
 		return JSONConverter.toList(this, elementType);
 	}
 
 	/**
-	 * 转为JSON字符串，无缩进
-	 *
-	 * @return JSONArray字符串
+	 * 
 	 */
 	@Override
 	public String toString() {
@@ -526,13 +421,7 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 	}
 
 	/**
-	 * 返回JSON字符串<br>
-	 * 支持过滤器，即选择哪些字段或值不写出
-	 *
-	 * @param indentFactor 每层缩进空格数
-	 * @param filter       过滤器，可以修改值，key（index）无法修改
-	 * @return JSON字符串
-	 * @since 5.7.15
+	 * 
 	 */
 	public String toJSONString(int indentFactor, Filter<MutablePair<Object, Object>> filter) {
 		final StringWriter sw = new StringWriter();
@@ -547,23 +436,14 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 	}
 
 	/**
-	 * 将JSON内容写入Writer<br>
-	 * 支持过滤器，即选择哪些字段或值不写出
-	 *
-	 * @param writer       writer
-	 * @param indentFactor 缩进因子，定义每一级别增加的缩进量
-	 * @param indent       本级别缩进量
-	 * @param filter       过滤器，可以修改值，key（index）无法修改
-	 * @return Writer
-	 * @throws JSONException JSON相关异常
-	 * @since 5.7.15
+	 * 
 	 */
 	public Writer write(Writer writer, int indentFactor, int indent, Filter<MutablePair<Object, Object>> filter) throws JSONException {
 		final JSONWriter jsonWriter = JSONWriter.of(writer, indentFactor, indent, config).beginArray();
 
 		CollUtil.forEach(this, (value, index) -> jsonWriter.writeField(new MutablePair<>(index, value), filter));
 		jsonWriter.end();
-		// 此处不关闭Writer，考虑writer后续还需要填内容
+		// 
 		return writer;
 	}
 
@@ -575,22 +455,17 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 	}
 
 	/**
-	 * 原始添加，添加的对象不做任何处理
-	 *
-	 * @param obj    添加的对象
-	 * @param filter 键值对过滤编辑器，可以通过实现此接口，完成解析前对值的过滤和修改操作，{@code null}表示不过滤
-	 * @return 是否加入成功
-	 * @since 5.8.0
+	 * 
 	 */
 	protected boolean addRaw(Object obj, Filter<Mutable<Object>> filter) {
-		// 添加前置过滤，通过MutablePair实现过滤、修改键值对等
+		// 
 		if (null != filter) {
 			final Mutable<Object> mutable = new MutableObj<>(obj);
 			if (filter.accept(mutable)) {
-				// 使用修改后的值
+				// 
 				obj = mutable.get();
 			}else{
-				// 键值对被过滤
+				// 
 				return false;
 			}
 		}
