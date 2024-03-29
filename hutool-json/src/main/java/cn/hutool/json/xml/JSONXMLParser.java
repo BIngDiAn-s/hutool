@@ -7,34 +7,20 @@ import cn.hutool.json.XML;
 import cn.hutool.json.XMLTokener;
 
 /**
- * XML解析器，将XML解析为JSON对象
- *
- * @author JSON.org, looly
+ * y
  * @since 5.7.11
  */
 public class JSONXMLParser {
 
 	/**
-	 * 转换XML为JSONObject
-	 * 转换过程中一些信息可能会丢失，JSON中无法区分节点和属性，相同的节点将被处理为JSONArray。
-	 *
-	 * @param jo          JSONObject
-	 * @param xmlStr      XML字符串
-	 * @param keepStrings 如果为{@code true}，则值保持String类型，不转换为数字或boolean
-	 * @throws JSONException 解析异常
+	 * 
 	 */
 	public static void parseJSONObject(JSONObject jo, String xmlStr, boolean keepStrings) throws JSONException {
 		parseJSONObject(jo, xmlStr, ParseConfig.of().setKeepStrings(keepStrings));
 	}
 
 	/**
-	 * 转换XML为JSONObject
-	 * 转换过程中一些信息可能会丢失，JSON中无法区分节点和属性，相同的节点将被处理为JSONArray。
-	 *
-	 * @param xmlStr      XML字符串
-	 * @param jo          JSONObject
-	 * @param parseConfig 解析选项
-	 * @throws JSONException 解析异常
+	 * 
 	 */
 	public static void parseJSONObject(final JSONObject jo, final String xmlStr, final ParseConfig parseConfig) throws JSONException {
 		final XMLTokener x = new XMLTokener(xmlStr, jo.getConfig());
@@ -44,15 +30,7 @@ public class JSONXMLParser {
 	}
 
 	/**
-	 * Scan the content following the named tag, attaching it to the context.
-	 *
-	 * @param x       The XMLTokener containing the source string.
-	 * @param context The JSONObject that will include the new material.
-	 * @param name    The tag name.
-	 * @param parseConfig 解析选项
-	 * @param currentNestingDepth 当前层级
-	 * @return true if the close tag is processed.
-	 * @throws JSONException JSON异常
+	 * 
 	 */
 	private static boolean parse(XMLTokener x, JSONObject context, String name, ParseConfig parseConfig, int currentNestingDepth) throws JSONException {
 		char c;
