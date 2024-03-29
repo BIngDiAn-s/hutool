@@ -209,7 +209,7 @@ public class JSONTokener {
 				case '\n':
 				case '\r':
 					throw this.syntaxError("Unterminated string");
-				case '\\':// 转义符
+				case '\\'://
 					c = this.next();
 					switch (c) {
 						case 'b':
@@ -227,7 +227,7 @@ public class JSONTokener {
 						case 'r':
 							sb.append('\r');
 							break;
-						case 'u':// Unicode符
+						case 'u':// 
 							sb.append((char) Integer.parseInt(this.next(4), 16));
 							break;
 						case '"':
