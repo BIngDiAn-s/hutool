@@ -12,9 +12,7 @@ import java.time.Month;
 import java.time.temporal.TemporalAccessor;
 
 /**
- * {@link TemporalAccessor}的JSON自定义序列化实现
- *
- * @author looly
+ * {@
  * @since 5.7.22
  */
 public class TemporalAccessorSerializer implements JSONObjectSerializer<TemporalAccessor>, JSONDeserializer<TemporalAccessor> {
