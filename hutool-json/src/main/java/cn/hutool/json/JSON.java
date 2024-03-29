@@ -10,7 +10,7 @@ import java.io.Writer;
 import java.lang.reflect.Type;
 
 /**
- * JSON接口
+ * 
  *
  * @author Looly
  */
