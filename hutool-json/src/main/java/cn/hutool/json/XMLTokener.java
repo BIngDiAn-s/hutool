@@ -1,7 +1,7 @@
 package cn.hutool.json;
 
 /**
- * XML分析器，继承自JSONTokener，提供XML的语法分析
+ * 
  *
  * @author JSON.org
  */
@@ -26,7 +26,7 @@ public class XMLTokener extends JSONTokener {
 	 * Construct an XMLTokener from a string.
 	 *
 	 * @param s      A source string.
-	 * @param config JSON配置
+
 	 */
 	public XMLTokener(CharSequence s, JSONConfig config) {
 		super(s, config);
@@ -148,7 +148,7 @@ public class XMLTokener extends JSONTokener {
 	 * Returns the next XML meta token. This is used for skipping over &lt;!...&gt; and &lt;?...?&gt; structures.
 	 *
 	 * @return Syntax characters ({@code < > / = ! ?}) are returned as Character, and strings and names are returned as Boolean. We don't care what the values actually are.
-	 * @throws JSONException 字符串中属性未关闭或XML结构错误抛出此异常。If a string is not properly closed or if the XML is badly structured.
+	 * @throws JSONExceptionIf a string is not properly closed or if the XML is badly structured.
 	 */
 	public Object nextMeta() throws JSONException {
 		char c;
@@ -292,9 +292,7 @@ public class XMLTokener extends JSONTokener {
 	/**
 	 * Skip characters until past the requested string. If it is not found, we are left at the end of the source with a result of false.
 	 *
-	 * @param to A string to skip past.
-	 * @return 是否成功skip
-	 * @throws JSONException JSON异常
+	 * @param 
 	 */
 	public boolean skipPast(String to) throws JSONException {
 		boolean b;
