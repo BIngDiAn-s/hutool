@@ -22,27 +22,12 @@ import java.util.Map;
 import java.util.ResourceBundle;
 
 /**
- * 对象和JSON映射器，用于转换对象为JSON，支持：
- * <ul>
- *     <li>Map 转 JSONObject，将键值对加入JSON对象</li>
- *     <li>Map.Entry 转 JSONObject</li>
- *     <li>CharSequence 转 JSONObject，使用JSONTokener解析</li>
- *     <li>{@link Reader} 转 JSONObject，使用JSONTokener解析</li>
- *     <li>{@link InputStream} 转 JSONObject，使用JSONTokener解析</li>
- *     <li>JSONTokener 转 JSONObject，直接解析</li>
- *     <li>ResourceBundle 转 JSONObject</li>
- *     <li>Bean 转 JSONObject，调用其getters方法（getXXX或者isXXX）获得值，加入到JSON对象。例如：如果JavaBean对象中有个方法getName()，值为"张三"，获得的键值对为：name: "张三"</li>
- * </ul>
- *
- * @author looly
- * @since 5.8.0
+ * 
  */
 public class ObjectMapper {
 
 	/**
-	 * 创建ObjectMapper
-	 *
-	 * @param source 来源对象
+	 * 
 	 * @return ObjectMapper
 	 */
 	public static ObjectMapper of(Object source) {
@@ -52,19 +37,14 @@ public class ObjectMapper {
 	private final Object source;
 
 	/**
-	 * 构造
-	 *
-	 * @param source 来源对象
+	 * 
 	 */
 	public ObjectMapper(Object source) {
 		this.source = source;
 	}
 
 	/**
-	 * 将给定对象转换为{@link JSONObject}
 	 *
-	 * @param jsonObject 目标{@link JSONObject}
-	 * @param filter     键值对过滤编辑器，可以通过实现此接口，完成解析前对键值对的过滤和修改操作
 	 */
 	@SuppressWarnings({"rawtypes", "unchecked"})
 	public void map(JSONObject jsonObject, Filter<MutablePair<String, Object>> filter) {
@@ -73,7 +53,7 @@ public class ObjectMapper {
 			return;
 		}
 
-		// 自定义序列化
+		// 
 		final JSONSerializer serializer = GlobalSerializeMapping.getSerializer(source.getClass());
 		if (serializer instanceof JSONObjectSerializer) {
 			serializer.serialize(jsonObject, source);
@@ -81,7 +61,7 @@ public class ObjectMapper {
 		}
 
 		if (source instanceof JSONArray) {
-			// 不支持集合类型转换为JSONObject
+			// 
 			throw new JSONException("Unsupported type [{}] to JSONObject!", source.getClass());
 		}
 
@@ -94,7 +74,7 @@ public class ObjectMapper {
 			final Map.Entry entry = (Map.Entry) source;
 			jsonObject.set(Convert.toStr(entry.getKey()), entry.getValue(), filter, jsonObject.getConfig().isCheckDuplicate());
 		} else if (source instanceof CharSequence) {
-			// 可能为JSON字符串
+			// 
 			mapFromStr((CharSequence) source, jsonObject, filter);
 		} else if (source instanceof Reader) {
 			mapFromTokener(new JSONTokener((Reader) source, jsonObject.getConfig()), jsonObject, filter);
@@ -109,20 +89,15 @@ public class ObjectMapper {
 			// JSONTokener
 			mapFromResourceBundle((ResourceBundle) source, jsonObject, filter);
 		} else if (BeanUtil.isReadableBean(source.getClass())) {
-			// 普通Bean
-			// TODO 过滤器对Bean无效，需补充。
+			// 
 			mapFromBean(source, jsonObject);
 		}
 
-		// 跳过空对象
+		
 	}
 
 	/**
-	 * 初始化
-	 *
-	 * @param jsonArray 目标{@link JSONArray}
-	 * @param filter    键值对过滤编辑器，可以通过实现此接口，完成解析前对值的过滤和修改操作，{@code null}表示不过滤
-	 * @throws JSONException 非数组或集合
+	 * 
 	 */
 	@SuppressWarnings({"rawtypes", "unchecked"})
 	public void map(JSONArray jsonArray, Filter<Mutable<Object>> filter) throws JSONException {
@@ -133,10 +108,10 @@ public class ObjectMapper {
 
 		final JSONSerializer serializer = GlobalSerializeMapping.getSerializer(source.getClass());
 		if (null != serializer && JSONArray.class.equals(TypeUtil.getTypeArgument(serializer.getClass()))) {
-			// 自定义序列化
+			// 
 			serializer.serialize(jsonArray, source);
 		} else if (source instanceof CharSequence) {
-			// JSON字符串
+			// 
 			mapFromStr((CharSequence) source, jsonArray, filter);
 		}else if (source instanceof Reader) {
 			mapFromTokener(new JSONTokener((Reader) source, jsonArray.getConfig()), jsonArray, filter);
@@ -144,12 +119,11 @@ public class ObjectMapper {
 			mapFromTokener(new JSONTokener((InputStream) source, jsonArray.getConfig()), jsonArray, filter);
 		} else if (source instanceof byte[]) {
 			final byte[] bytesSource = (byte[]) source;
-			// 如果是普通的的byte[], 要避免下标越界
+			// 
 			if (bytesSource.length > 1 && '[' == bytesSource[0] && ']' == bytesSource[bytesSource.length - 1]) {
 				mapFromTokener(new JSONTokener(IoUtil.toStream(bytesSource), jsonArray.getConfig()), jsonArray, filter);
 			}else{
-				// https://github.com/dromara/hutool/issues/2369
-				// 非标准的二进制流，则按照普通数组对待
+				// 
 				for(final byte b : bytesSource){
 					jsonArray.add(b);
 				}
@@ -158,7 +132,7 @@ public class ObjectMapper {
 			mapFromTokener((JSONTokener) source, jsonArray, filter);
 		} else {
 			final Iterator<?> iter;
-			if (ArrayUtil.isArray(source)) {// 数组
+			if (ArrayUtil.isArray(source)) {// 
 				iter = new ArrayIter<>(source);
 			} else if (source instanceof Iterator<?>) {// Iterator
 				iter = ((Iterator<?>) source);
@@ -168,7 +142,7 @@ public class ObjectMapper {
 				if(false == jsonArray.getConfig().isIgnoreError()){
 					throw new JSONException("JSONArray initial value should be a string or collection or array.");
 				}
-				// 如果用户选择跳过异常，则跳过此值转换
+				// 
 				return;
 			}
 
@@ -176,7 +150,7 @@ public class ObjectMapper {
 			Object next;
 			while (iter.hasNext()) {
 				next = iter.next();
-				// 检查循环引用
+				// 
 				if (next != source) {
 					jsonArray.addRaw(JSONUtil.wrap(next, config), filter);
 				}
@@ -185,11 +159,7 @@ public class ObjectMapper {
 	}
 
 	/**
-	 * 从{@link ResourceBundle}转换
-	 *
-	 * @param bundle     ResourceBundle
-	 * @param jsonObject {@link JSONObject}
-	 * @param filter     键值对过滤编辑器，可以通过实现此接口，完成解析前对键值对的过滤和修改操作，{@code null}表示不过滤
+	 *   
 	 * @since 5.3.1
 	 */
 	private static void mapFromResourceBundle(ResourceBundle bundle, JSONObject jsonObject, Filter<MutablePair<String, Object>> filter) {
@@ -203,16 +173,12 @@ public class ObjectMapper {
 	}
 
 	/**
-	 * 从字符串转换
-	 *
-	 * @param source     JSON字符串
-	 * @param jsonObject {@link JSONObject}
-	 * @param filter     键值对过滤编辑器，可以通过实现此接口，完成解析前对键值对的过滤和修改操作，{@code null}表示不过滤
+	 * 
 	 */
 	private static void mapFromStr(CharSequence source, JSONObject jsonObject, Filter<MutablePair<String, Object>> filter) {
 		final String jsonStr = StrUtil.trim(source);
 		if (StrUtil.startWith(jsonStr, '<')) {
-			// 可能为XML
+			// 
 			XML.toJSONObject(jsonObject, jsonStr, false);
 			return;
 		}
@@ -220,11 +186,7 @@ public class ObjectMapper {
 	}
 
 	/**
-	 * 初始化
-	 *
-	 * @param source    JSON字符串
-	 * @param jsonArray {@link JSONArray}
-	 * @param filter    值过滤编辑器，可以通过实现此接口，完成解析前对值的过滤和修改操作，{@code null}表示不过滤
+	 * 
 	 */
 	private void mapFromStr(CharSequence source, JSONArray jsonArray, Filter<Mutable<Object>> filter) {
 		if (null != source) {
@@ -233,32 +195,21 @@ public class ObjectMapper {
 	}
 
 	/**
-	 * 从{@link JSONTokener}转换
-	 *
-	 * @param x          JSONTokener
-	 * @param jsonObject {@link JSONObject}
-	 * @param filter     键值对过滤编辑器，可以通过实现此接口，完成解析前对键值对的过滤和修改操作
+	 * 
 	 */
 	private static void mapFromTokener(JSONTokener x, JSONObject jsonObject, Filter<MutablePair<String, Object>> filter) {
 		JSONParser.of(x).parseTo(jsonObject, filter);
 	}
 
 	/**
-	 * 初始化
-	 *
-	 * @param x         {@link JSONTokener}
-	 * @param jsonArray {@link JSONArray}
-	 * @param filter    值过滤编辑器，可以通过实现此接口，完成解析前对值的过滤和修改操作，{@code null}表示不过滤
+	 * 
 	 */
 	private static void mapFromTokener(JSONTokener x, JSONArray jsonArray, Filter<Mutable<Object>> filter) {
 		JSONParser.of(x).parseTo(jsonArray, filter);
 	}
 
 	/**
-	 * 从Bean转换
-	 *
-	 * @param bean       Bean对象
-	 * @param jsonObject {@link JSONObject}
+	 * 
 	 */
 	private static void mapFromBean(Object bean, JSONObject jsonObject) {
 		BeanUtil.beanToMap(bean, jsonObject, InternalJSONUtil.toCopyOptions(jsonObject.getConfig()));
