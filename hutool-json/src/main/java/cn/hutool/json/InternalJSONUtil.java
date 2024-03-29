@@ -71,8 +71,7 @@ public final class InternalJSONUtil {
 	/**
 	 * 
 	 *
-	 * @param string A String.
-	 * @return A simple JSON value.
+	
 	 */
 	public static Object stringToValue(String string) {
 		// 
