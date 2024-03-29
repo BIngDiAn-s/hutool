@@ -154,7 +154,7 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 	 * Append an object value. This increases the array's length by one. <br>
 	 * 
 	 *
-	 * @param value 值，可以是： Boolean, Double, Integer, JSONArray, JSONObject, Long, or String, or the JSONNull.NULL。
+	 * @param value 
 	 * @return this.
 	 * @see #set(Object)
 	 */
@@ -166,7 +166,7 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 	 * Append an object value. This increases the array's length by one. <br>
 	
 	 *
-	 * @param value 值，可以是： Boolean, Double, Integer, JSONArray, JSONObject, Long, or String, or the JSONNull.NULL。
+	 * @param valu
 	 * @return this.
 	 * @since 5.2.5
 	 */
